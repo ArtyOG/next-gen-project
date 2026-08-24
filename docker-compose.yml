@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  # 1. Database Service
+  mysql_db:
+    image: mysql:8.0
+    container_name: mysql_db
+    environment:
+      MYSQL_ROOT_PASSWORD: secretpassword
+      MYSQL_DATABASE: my_app_db
+    ports:
+      - "3306:3306"
+
+  # 2. Backend Service
+  backend:
+    build: ./Backend
+    container_name: nestjs_backend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mysql_db
+
+  # 3. AI Service
+  ai_service:
+    build: ./"AI service"
+    container_name: fastapi_ai
+    ports:
+      - "8000:8000"
+
+  # 4. Frontend Service
+  frontend:
+    build: ./Frontend
+    container_name: react_frontend
+    ports:
+      - "80:80"
